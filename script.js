@@ -78,9 +78,10 @@ class Particles {
 }
 
 class Effect {
-  constructor(width, height){
-    this.width = width
-    this.height = height
+  constructor(canvas){
+    this.canvas = canvas
+    this.width = this.canvas.width
+    this.height = this.canvas.height
     this.particles = []
     this.numberOfParticles = 2000
     this.cellSize = 20
@@ -98,7 +99,8 @@ class Effect {
     })
 
     window.addEventListener('resize', e => {
-      console.log(e.target.innerWidth, e.target.innerHeight)
+      //console.log(e.target.innerWidth, e.target.innerHeight)
+      this.resize(e.target.innerWidth, e.target.innerHeight)
     })
   }
   init(){
@@ -115,6 +117,7 @@ class Effect {
     }
 
     //create particles
+    this.particles = []
     for (let i = 0; i < this.numberOfParticles; i++){
       this.particles.push(new Particles(this))
     }    
@@ -137,6 +140,13 @@ class Effect {
     }
     context.restore()
   }
+  resize(width, height){
+    this.canvas.width = width
+    this.canvas.height = height
+    this.width = this.canvas.width
+    this.height = this.canvas.height
+    this.init()
+  }
   render(context){
     if (this.debug) this.drawGrid(context)
     this.particles.forEach(particle => {
@@ -146,7 +156,7 @@ class Effect {
   }
 }
 
-const effect = new Effect(canvas.width, canvas.height)
+const effect = new Effect(canvas)
   //console.log(effect)
 
 function animate(){
